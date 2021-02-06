@@ -105,7 +105,7 @@ def respond(voice_data):
 
     if 'CPU' and ('usage' or 'status') in voice_data:
         usage = str(psutil.cpu_percent(4)/psutil.cpu_count())
-        bot_speak('The current CPU usage is: '+ usage 'percent')
+        bot_speak('The current CPU usage is: '+ usage +'percent')
 
     if 'enable' and 'bluetooth' in voice_data:
         os.system("Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser")
