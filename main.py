@@ -100,13 +100,14 @@ def respond(voice_data):
         flag = 0
         drives = win32api.GetLogicalDriveStrings()
         drives = drives.split('\000')[:-1]
+        search_file = record_audio("Name the file you want to search")
+        
         for extension in extensions:
-            search_file = record_audio("Name the file you want to search")
-            search_file = search_file + extensions[extension]
+            buffer = search_file + extensions[extension]
             for drive in drives:
                 listing = os.walk(drive)
                 for root_path, directories, files in listing:
-                    if search_file in files:
+                    if buffer in files:
                         path = os.path.join(root_path, search_file)
                         bot_speak("File found at" + path +" Opening file")
                         flag = 1
