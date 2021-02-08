@@ -43,24 +43,6 @@ def bot_speak(audio_string):
     os.remove(audio_file)    
 
 def respond(voice_data):
-    if 'What is your name' in voice_data:
-        print('My name is Veda')
-    if 'what time is it' in voice_data:
-        print(ctime())
-    if 'search' in voice_data:
-        search=record_audio('What do you want to search for?')
-        url= 'https://google.com/search?q=' + search
-        webbrowser.get().open(url)
-        print('Here is what I found for' + search)
-    if 'location' in voice_data:
-        location=record_audio('What is the location?')
-        url= 'https://google.nl/maps/place/' + location +'/&amp;'
-        webbrowser.get().open(url)
-        print('Here is the location of' + location)
-    if 'exit' in voice_data:
-        exit()
-
-def respond(voice_data):
     a={'hello':'hi','hi':'hello','how are you':'I\'m fine ','What is your name':'Alexa'}
     if voice_data in a :
         bot_speak(a[voice_data])#value of key is printed
@@ -79,10 +61,6 @@ def respond(voice_data):
         url='https://google.nl/maps/place/' +location +'/&amp;'
         webbrowser.get().open(url)
         bot_speak('Here is what i found for ' + location)
-
-    if 'open' and 'game' in voice_data:
-        bot_speak('Opening valorant')
-        os.startfile('"E:/Games/The Sinking City/TSCGame.exe"')
 
     if ('battery' or 'power') and ('status' or 'source') in voice_data:
         battery = psutil.sensors_battery()
@@ -116,6 +94,27 @@ def respond(voice_data):
         os.system("Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser")
         os.system("powershell -command ./bluetooth.ps1 -BluetoothStatus Off")
         bot_speak('Bluetooth disabled.')
+        
+    if 'open' in voice_data:
+        extensions = {'python': '.py', 'text': '.java', 'executable': '.exe', 'java': '.txt'}
+        flag = 0
+        drives = win32api.GetLogicalDriveStrings()
+        drives = drives.split('\000')[:-1]
+        for extension in extensions:
+            search_file = record_audio("Name the file you want to search")
+            search_file = search_file + extensions[extension]
+            for drive in drives:
+                listing = os.walk(drive)
+                for root_path, directories, files in listing:
+                    if search_file in files:
+                        path = os.path.join(root_path, search_file)
+                        bot_speak("File found at" + path +" Opening file")
+                        flag = 1
+                        os.startfile(path)
+                        break
+        if flag == 0:
+            bot_speak("File Not Found At: " + path)
+
 
     if 'exit' in voice_data:
         exit()
