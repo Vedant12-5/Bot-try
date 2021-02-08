@@ -8,7 +8,6 @@ from gtts import gTTS
 import webbrowser
 import psutil
 import requests
-import json 
 
 raw=sr.Recognizer()
 
@@ -17,9 +16,8 @@ def record_audio(ask=False):
         if ask:
             bot_speak(ask)
 
-        audio = raw.adjust_for_ambient_noise(source) # listen for 1 second to calibrate the energy threshold for ambient noise levels
+        raw.adjust_for_ambient_noise(source) # listen for 1 second to calibrate the energy threshold for ambient noise levels
         audio = raw.listen(source)
-        voice_data = ''
 
         try:
             voice_data = raw.recognize_google(audio)
@@ -116,7 +114,34 @@ def respond(voice_data):
         if flag == 0:
             bot_speak("File Not Found At: " + path)
 
-
+    if 'camera' and 'audio' in voice_data: #with audio
+        cam = cv2.VideoCapture(0)
+        count = 1
+        capture_success = 0
+        while capture_success == 0:
+            ret, img = cam.read()
+            bot_speak("Camera Opened")
+            cv2.imshow("CAMERA", img)
+            task = record_audio()
+            if capture_success == 1:
+                break
+            elif not ret:
+                capture_success = 1
+                break
+            if 'close' in task:
+                cam.release()
+                cv2.destroyAllWindows()
+                capture_success = 1
+                bot_speak("Closing Camera")
+                break
+            elif 'capture' in task:
+                file = record_audio("What is you file name")
+                file = file.lower()
+                file = 'E:/Python/'+file+'.jpg'
+                cv2.imwrite(file, img)
+                bot_speak("Capture Successful")
+                capture_success = 1
+                
     if 'exit' in voice_data:
         exit()
 
