@@ -142,6 +142,37 @@ def respond(voice_data):
                 bot_speak("Capture Successful")
                 capture_success = 1
                 
+                
+     if 'camera' and 'keys' in voice_data:
+        cam = cv2.VideoCapture(0)
+        address = "http://192.168.43.150:8080/video" #IP address from IP-Cam
+        cam.open(address)
+        count = 0
+        while True:
+            ret, img = cam.read()
+            cv2.imshow("Test", img)
+            if not ret:
+                break
+                
+            k=cv2.waitKey(1)
+
+            if k%256==27:
+                #For Esc key
+                print("Close")
+                break
+
+            elif k%256==32:
+                #For Space key
+                print("Image "+str(count)+"saved")
+                file = record_audio("What do you want to keep the file name??")
+                file = file.lower()
+                file='E:\python'+file+'.jpg'
+                cv2.imwrite(file, img)
+                count +=1
+                
+        cam.release()
+
+        cv2.destroyWindow('Test')           
     if 'exit' in voice_data:
         exit()
 
