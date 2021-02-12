@@ -143,7 +143,7 @@ def respond(voice_data):
                 capture_success = 1
                 
                 
-     if 'camera' and 'keys' in voice_data:
+    if 'camera' and 'keys' in voice_data:
         cam = cv2.VideoCapture(0)
         address = "http://192.168.43.150:8080/video" #IP address from IP-Cam
         cam.open(address)
@@ -172,7 +172,16 @@ def respond(voice_data):
                 
         cam.release()
 
-        cv2.destroyWindow('Test')           
+        cv2.destroyWindow('Test') 
+        
+    if 'restart' in voice_data:
+        bot_speak('Restarting your laptop')
+        subprocess.call(["shutdown","/r"])
+        
+     if 'shutdown' in voice_data:
+        bot_speak('Shutting down your laptop')
+        subprocess.call(["shutdown","/s"])       
+
     if 'exit' in voice_data:
         exit()
 
